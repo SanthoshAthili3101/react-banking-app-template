@@ -17,7 +17,7 @@ concurrency:
 env:
   aws_region: ap-south-1
   ECR_REPOSITORY:  react-banking-app
-  image_tag: ${{ github.sha }}
+  IMAGE_TAG: ${{ github.sha }}
 
 # Permissions
 permissions:
@@ -56,7 +56,7 @@ jobs:
         context: .
         file: Dockerfile
         load: true  #  keep image local (dont push yet) so we can scan it 
-        tags: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.image_tag }}
+        tags: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
         # this caches your layers in Github Actions
         cache-from: type=gha
         cache-to: type=gha,mode=max
@@ -65,7 +65,7 @@ jobs:
     - name: Run Trivy vulnerability scan
       uses: aquasecurity/trivy-action@master
       with:
-        image-ref: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.image_tag }}
+        image-ref: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
         format: 'table'
         exit-code: '1'
         severity: 'CRITICAL,HIGH'
@@ -74,13 +74,15 @@ jobs:
 
     #stage 7: OPTIMIZATION PHASE (Using Docker Slim)/
     - name: Minify Image using SlimtoolKit
-      uses: kitabisa/docker-slim-action@v1.2.0
-      env:
-        DSLIM_HTTP_PROBE: false
-      with:
-        target: '${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:fat-${{ env.IMAGE_TAG }}'
-        tag: ${{ env.IMAGE_TAG }}
-        include_path: '/usr/share/nginx/html' # Whitelist Frontend assets
+      run: |
+        echo "Running SlimToolkit..."
+        docker run --rm \
+          -v /var/run/docker.sock:/var/run/docker.sock \
+          dslim/slim build \
+          --target ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:fat-${{ env.IMAGE_TAG }} \
+          --tag ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }} \
+          --http-probe=false \
+          --include-path /usr/share/nginx/html 
 
     #stage 8: Push Phase
     - name: Push Optimized Image to ECR
