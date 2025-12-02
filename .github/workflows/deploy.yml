@@ -129,7 +129,7 @@ jobs:
 
     # DAST Scan with OWASP ZAP
     - name: DAST with OWASP ZAP
-      uses: zaproxy/action-full-scan@v0.8.0
+      uses: zaproxy/action-full-scan@v0.13.0
       with:
         target: 'http://localhost:8080'
         fail_action: false  # Do not fail the job on alerts
