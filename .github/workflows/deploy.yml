@@ -40,7 +40,7 @@ jobs:
     # Stage 2: Secret Scanning (TruffleHog)
     # Checks git history for leaked AWS keys, tokens, etc.
     - name: Secret Scanning with TruffleHog
-      uses: trufflesecurity/trufflehog-action@v2
+      uses: trufflesecurity/trufflehog-action@v3.91.1
       with:
         scan_type: git
         extra_args: --only-verified
