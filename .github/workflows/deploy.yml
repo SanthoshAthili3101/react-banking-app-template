@@ -3,7 +3,7 @@ name: React App Deployment
 # Triggers
 on:
   push:
-    branches: [main]
+    branches: [master]
 
   # Allows you to run this manually from the Actions tab for debugging
   workflow_dispatch:
