@@ -100,14 +100,14 @@ jobs:
     # Start container to DAST
     - name: Start Application Container
       run: |
-        docker run -d -p 8000:80 --name dast-container slim-image:latest
+        docker run -d -p 8080:80 --name dast-container slim-image:latest
         # Wait for the application to be up and running
         sleep 10  # Adjust sleep time as necessary for your app to start
     # DAST Scan with OWASP ZAP
     - name: DAST with OWASP ZAP
       uses: zaproxy/action-full-scan@v0.8.0
       with:
-        target: 'http://localhost:8000'
+        target: 'http://localhost:8080'
         fail_action: false  # Do not fail the job on alerts
         allow_issue_writing: false
     # Stop and remove the application container
