@@ -72,13 +72,13 @@ jobs:
         generateSarif: true
         sarif: ${{ github.workspace }}/semgrep.sarif
     
-    # Upload Semgrep results to GitHub Security Tab
-    - name: Upload Semgrep Report
-      uses: github/codeql-action/upload-sarif@v3
-      if: always() 
-      with:
-        sarif_file: semgrep.sarif
-        category: semgrep
+    # # Upload Semgrep results to GitHub Security Tab
+    # - name: Upload Semgrep Report
+    #   uses: github/codeql-action/upload-sarif@v3
+    #   if: always() 
+    #   with:
+    #     sarif_file: semgrep.sarif
+    #     category: semgrep
 
     # Stage 4: IaC Scanning (Trivy)      
     # Scans your Infrastructure as Code (Terraform & Dockerfile) for misconfigurations
