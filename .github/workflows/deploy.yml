@@ -69,7 +69,8 @@ jobs:
           p/react
           p/owasp-top-ten
           p/security-audit
-        generatSarif: "semgrep.sarif"  
+        generateSarif: true
+        sarif: semgrep.sarif  
     
     # Upload Semgrep results to GitHub Security Tab
     - name: Upload Semgrep Report
