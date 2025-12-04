@@ -69,14 +69,14 @@ jobs:
           p/react
           p/owasp-top-ten
           p/security-audit
-        generatSarif: "semgrep-report.sarif"  
+        generatSarif: 'semgrep-report.sarif'  
     
     # Upload Semgrep results to GitHub Security Tab
     - name: Upload Semgrep Report
       uses: github/codeql-action/upload-sarif@v3
       if: always() 
       with:
-        sarif_file: semgrep-report.sarif
+        sarif_file: 'semgrep-report.sarif'
         category: semgrep
 
     # Stage 4: IaC Scanning (Trivy)      
