@@ -111,7 +111,7 @@ jobs:
     # Start container to DAST
     - name: Start Application Container
       run: |
-        # MAP PORT 8080 (Host) -> 80 (Container)
+        # MAP PORT 8080 (Host) -> 8080 (Container)
         docker run -d -p 8080:8080 --name dast-container slim-image:latest
 
     - name: Wait for App to be Ready

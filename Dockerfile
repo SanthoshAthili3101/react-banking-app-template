@@ -17,7 +17,7 @@ COPY --from=build /app/build /usr/share/nginx/html
 
 # 3. CRITICAL FIX: Change Nginx Listen Port from 80 to 8080
 # This matches your Terraform Target Group settings.
-RUN sed -i 's/listen  80;/listen 8080;/' /etc/nginx/conf.d/default.conf
+RUN sed -i 's/listen.*80;/listen 8080;/' /etc/nginx/conf.d/default.conf
 # 4. Expose the new port
 EXPOSE 8080
 
