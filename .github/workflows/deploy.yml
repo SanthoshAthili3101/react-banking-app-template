@@ -55,7 +55,7 @@ jobs:
       uses: hashicorp/setup-terraform@v3
       with:
         terraform_version: "1.10.0"
-        
+
     - name: Terraform Plan & OPA Check
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -72,10 +72,10 @@ jobs:
         # We stay in the 'terraform' directory and reference policies in the parent (../policies)
         echo "🔍 Running OPA Policies..."
         
-        opa eval --format pretty \
-          --input tfplan.json \
-          --data ../policies/ \
-          "data.terraform.analysis.deny" > opa-result.txt
+        conftest test tfplan.json \
+          --policy ../policies \
+          --namespace terraform.analysis \
+          --output sarif > opa-results.sarif || true
         
         # 3. Check and Display Results
         if [ -s opa-result.txt ] && grep -q "ALERT" opa-result.txt; then
@@ -90,6 +90,13 @@ jobs:
         else
            echo "✅ OPA Check Passed"
         fi
+
+    - name: Upload OPA Results to GitHub Security
+      uses: github/codeql-action/upload-sarif@v3
+      if: always()
+      with:
+        sarif_file: terraform/opa-results.sarif
+        category: opa-compliance
     
     # # Stage 2: Secret Scanning (TruffleHog)
     # # Checks git history for leaked AWS keys, tokens, etc.
